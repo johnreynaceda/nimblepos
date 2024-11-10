@@ -86,14 +86,19 @@
                 <h1 class="text-xs">{{ $transaction_number }}</h1>
             </div>
             <div class="p-5 px-6 flex flex-col h-full">
-                <div class="flex">
-                    <span class="text-sm font-semibold">Total Items</span><span
-                        class="font-poppins">({{ count($product_items) }})</span>
+                <div class="flex justify-between items-center">
+                    <div class="flex">
+                        <span class="text-sm font-semibold">Total Items</span><span
+                            class="font-poppins">({{ count($product_items) }})</span>
+                    </div>
+                    <div>
+                        <x-button label="Clear All" xs negative wire:click="$set('product_items', [])" />
+                    </div>
                 </div>
                 <div class="mt-10 lg:mt-0">
                     <div class="mt-4 rounded-lg border border-gray-200 bg-white shadow-sm">
                         <h3 class="sr-only">Items in your cart</h3>
-                        <ul role="list" class="divide-y divide-gray-200 h-80 overflow-y-auto" x-auto-animate.linear>
+                        {{-- <ul role="list" class="divide-y divide-gray-200 h-80 overflow-y-auto" x-auto-animate.linear>
                             @forelse ($product_items as $key => $item)
                                 <li class="flex px-4 py-3 sm:px-6">
                                     <div class="flex-shrink-0">
@@ -129,12 +134,22 @@
                                         </div>
 
                                         <div class="flex flex-1 items-end justify-between pt-2">
-                                            <p class="mt-1 text-sm font-medium text-gray-900">
-                                                &#8369;{{ number_format($item['price'], 2) }}
-                                            </p>
-                                            <div class="ml-4">
-                                                <label for="quantity" class="sr-only">Quantity</label>
-                                                <span>Qty: {{ $item['quantity'] }}</span>
+                                            <div>
+                                                <p class="mt-1 text-sm font-medium text-gray-900">
+                                                    &#8369;{{ number_format($item['price'], 2) }}
+                                                </p>
+                                                <div class="">
+                                                    <label for="quantity" class="sr-only">Quantity</label>
+                                                    <span class="text-sm">Qty: {{ $item['quantity'] }}</span>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div
+                                                    class="flex justify-between rounded-full border-2 border-gray-400 space-x-4 font-bold px-2 text-gray-500 ">
+                                                    <button class="hover:text-red-500">-</button>
+                                                    <span>0</span>
+                                                    <button class="hover:text-green-500">+</button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -174,7 +189,101 @@
                                     </div>
                                 </li>
                             @endforelse
+                        </ul> --}}
+                        <ul role="list" class="divide-y divide-gray-200 h-80 overflow-y-auto" x-data>
+                            @forelse ($product_items as $key => $item)
+                                <li class="flex px-4 py-3 sm:px-6">
+                                    <div class="flex-shrink-0">
+                                        <img src="{{ Storage::url($item['image']) }}" alt="{{ $item['name'] }} image"
+                                            class="h-20 w-20 object-cover rounded-md">
+                                    </div>
+
+                                    <div class="ml-2 flex flex-1 flex-col">
+                                        <div class="flex">
+                                            <div class="min-w-0 flex-1">
+                                                <h4 class="text-sm">
+                                                    <a href="#"
+                                                        class="font-semibold text-gray-700 hover:text-gray-800 uppercase">{{ $item['name'] }}</a>
+                                                </h4>
+                                            </div>
+                                            <div class="ml-4 flex-shrink-0">
+                                                <button type="button" wire:click="removeProduct({{ $key }})"
+                                                    class="-m-2.5 flex items-center justify-center bg-white p-2.5 text-red-400 hover:text-red-500">
+                                                    <span class="sr-only">Remove</span>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                        height="24" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        class="icon icon-tabler icon-tabler-backspace">
+                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                        <path
+                                                            d="M20 6a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-11l-5 -5a1.5 1.5 0 0 1 0 -2l5 -5z" />
+                                                        <path d="M12 10l4 4m0 -4l-4 4" />
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div class="flex flex-1 items-end justify-between pt-2">
+                                            <div>
+                                                <p class="mt-1 text-sm font-medium text-gray-900">
+                                                    &#8369;{{ number_format($item['price'], 2) }}
+                                                </p>
+                                                <div>
+                                                    <label for="quantity" class="sr-only">Quantity</label>
+                                                    <span class="text-sm">Qty: {{ $item['quantity'] }}</span>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div
+                                                    class="flex justify-between rounded-full border-2 border-gray-400 space-x-2  px-4 text-gray-500">
+                                                    <button wire:click="minusQty({{ $key }})"
+                                                        class="hover:text-red-500 font-semibold">-</button>
+                                                    <input type="text"
+                                                        wire:model.live="product_items.{{ $key }}.quantity"
+                                                        class="w-14 h-6 text-center border-0 focus:border-0 outline-none focus:outline-none" />
+                                                    <button wire:click="addQty({{ $key }})"
+                                                        class="hover:text-green-500 font-semibold">+</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            @empty
+                                <li class="px-4 py-3 sm:px-6 text-center text-gray-500">
+                                    <div class="grid place-content-center mt-10 space-y-5">
+                                        <svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" class="h-40"
+                                            viewBox="0 0 647.63626 632.17383"
+                                            xmlns:xlink="http://www.w3.org/1999/xlink">
+                                            <path
+                                                d="M687.3279,276.08691H512.81813a15.01828,15.01828,0,0,0-15,15v387.85l-2,.61005-42.81006,13.11a8.00676,8.00676,0,0,1-9.98974-5.31L315.678,271.39691a8.00313,8.00313,0,0,1,5.31006-9.99l65.97022-20.2,191.25-58.54,65.96972-20.2a7.98927,7.98927,0,0,1,9.99024,5.3l32.5498,106.32Z"
+                                                transform="translate(-276.18187 -133.91309)" fill="#f2f2f2" />
+                                            <path
+                                                d="M725.408,274.08691l-39.23-128.14a16.99368,16.99368,0,0,0-21.23-11.28l-92.75,28.39L380.95827,221.60693l-92.75,28.4a17.0152,17.0152,0,0,0-11.28028,21.23l134.08008,437.93a17.02661,17.02661,0,0,0,16.26026,12.03,16.78926,16.78926,0,0,0,4.96972-.75l63.58008-19.46,2-.62v-2.09l-2,.61-64.16992,19.65a15.01489,15.01489,0,0,1-18.73-9.95l-134.06983-437.94a14.97935,14.97935,0,0,1,9.94971-18.73l92.75-28.4,191.24024-58.54,92.75-28.4a15.15551,15.15551,0,0,1,4.40966-.66,15.01461,15.01461,0,0,1,14.32032,10.61l39.0498,127.56.62012,2h2.08008Z"
+                                                transform="translate(-276.18187 -133.91309)" fill="#3f3d56" />
+                                            <path
+                                                d="M398.86279,261.73389a9.0157,9.0157,0,0,1-8.61133-6.3667l-12.88037-42.07178a8.99884,8.99884,0,0,1,5.9712-11.24023l175.939-53.86377a9.00867,9.00867,0,0,1,11.24072,5.9707l12.88037,42.07227a9.01029,9.01029,0,0,1-5.9707,11.24072L401.49219,261.33887A8.976,8.976,0,0,1,398.86279,261.73389Z"
+                                                transform="translate(-276.18187 -133.91309)" fill="#777777" />
+                                            <circle cx="190.15351" cy="24.95465" r="20" fill="#777777" />
+                                            <circle cx="190.15351" cy="24.95465" r="12.66462" fill="#fff" />
+                                            <path
+                                                d="M878.81836,716.08691h-338a8.50981,8.50981,0,0,1-8.5-8.5v-405a8.50951,8.50951,0,0,1,8.5-8.5h338a8.50982,8.50982,0,0,1,8.5,8.5v405A8.51013,8.51013,0,0,1,878.81836,716.08691Z"
+                                                transform="translate(-276.18187 -133.91309)" fill="#e6e6e6" />
+                                            <path
+                                                d="M723.31813,274.08691h-210.5a17.02411,17.02411,0,0,0-17,17v407.8l2-.61v-407.19a15.01828,15.01828,0,0,1,15-15H723.93825Zm183.5,0h-394a17.02411,17.02411,0,0,0-17,17v458a17.0241,17.0241,0,0,0,17,17h394a17.0241,17.0241,0,0,0,17-17v-458A17.02411,17.02411,0,0,0,906.81813,274.08691Zm15,475a15.01828,15.01828,0,0,1-15,15h-394a15.01828,15.01828,0,0,1-15-15v-458a15.01828,15.01828,0,0,1,15-15h394a15.01828,15.01828,0,0,1,15,15Z"
+                                                transform="translate(-276.18187 -133.91309)" fill="#3f3d56" />
+                                            <path
+                                                d="M801.81836,318.08691h-184a9.01015,9.01015,0,0,1-9-9v-44a9.01016,9.01016,0,0,1,9-9h184a9.01016,9.01016,0,0,1,9,9v44A9.01015,9.01015,0,0,1,801.81836,318.08691Z"
+                                                transform="translate(-276.18187 -133.91309)" fill="#777777" />
+                                            <circle cx="433.63626" cy="105.17383" r="20" fill="#777777" />
+                                            <circle cx="433.63626" cy="105.17383" r="12.18187" fill="#fff" />
+                                        </svg>
+                                        <p>No items</p>
+                                    </div>
+                                </li>
+                            @endforelse
                         </ul>
+
 
                         <div>
 
@@ -313,8 +422,8 @@
                             <h1>{{ now()->format('F d, Y') }}</h1>
                         </div>
                         <div class="border-4 mt-5 border-gray-700"></div>
-                        <div class="mt-5 text-center">
-                            <span class="text-lg font-semibold">{{ $transaction_type ?? '' }}</span>
+                        <div class="mt-5">
+                            <span class="text-lg font-medium">Payment Method: {{ $transaction_type ?? '' }}</span>
                         </div>
                         <div class="mt-5">
                             @foreach ($product_items as $key => $item)
@@ -324,7 +433,7 @@
                                     </div>
                                     <div>{{ $item['quantity'] }}x</div>
                                     <div class="text-right">
-                                        &#8369;{{ number_format($item['price'] * $item['quantity'], 2) }}
+                                        &#8369;{{ number_format($item['price'] * (float) $item['quantity'], 2) }}
                                     </div>
                                 </div>
                             @endforeach
@@ -416,13 +525,13 @@
                     </div>
                     <div class="mt-5">
                         <div class="relative flex w-full flex-col gap-1 text-slate-700 dark:text-slate-300">
-                            <label for="os" class="w-fit pl-0.5 text-sm">Transaction Type</label>
+                            <label for="os" class="w-fit pl-0.5 text-sm">Payment Method</label>
 
                             <select id="os" name="os" wire:model.live="transaction_type"
                                 class="w-full appearance-none rounded-lg border border-slate-300  px-4 py-2 text-sm focus-visible:outline  disabled:cursor-not-allowed disabled:opacity-75 dark:border-slate-700 dark:bg-slate-800/50 dark:focus-visible:outline-blue-600">
                                 <option selected>Please Select</option>
-                                <option value="Dine In">Dine In</option>
-                                <option value="Take Out">Take Out</option>
+                                <option value="Cash">Cash</option>
+                                <option value="GCash">GCash</option>
                             </select>
                         </div>
                         @error('transaction_type')

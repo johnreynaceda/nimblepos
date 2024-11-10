@@ -49,7 +49,7 @@
                     {{-- <button type="button" wire:click="confirmLogout"
                         class="cursor-pointer whitespace-nowrap rounded-2xl bg-green-700 px-4 py-2 text-center text-sm font-medium tracking-wide text-slate-100 transition hover:opacity-75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 active:opacity-100 active:outline-offset-0 dark:bg-blue-600 dark:text-slate-100 dark:focus-visible:outline-blue-600">Log
                         Out</button> --}}
-                    <x-button label="Log Out" positive rounded="xl" class="font-semibold" wire:click="confirmLogout"
+                    <x-button label="Log Out" negative rounded="xl" class="font-semibold" wire:click="confirmLogout"
                         spinner="confirmLogout" right-icon="arrow-left-end-on-rectangle" />
                 </div>
             </div>

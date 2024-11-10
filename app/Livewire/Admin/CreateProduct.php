@@ -31,7 +31,18 @@ class CreateProduct extends Component implements HasForms
 
 
     public function mount(){
-        $this->sku = substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 10);
+        $this->sku = substr(str_shuffle('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 10);
+    }
+
+    public function updatedInventories(){
+      // Reset cost to zero before recalculating
+    $this->cost = 0;
+
+    // Retrieve all matching inventory stocks in a single query
+    $data = InventoryStock::whereIn('id', $this->inventories)->get();
+
+    // Sum up the cost for each inventory item
+    $this->cost = $data->sum('cost');
     }
     public function form(Form $form): Form
     {
@@ -46,7 +57,7 @@ class CreateProduct extends Component implements HasForms
                     TextInput::make('name')->required(),
                     Select::make('category')->options(Category::all()->pluck('name', 'id'))->required(),
                     Textarea::make('description')->required()->columnSpan(2),
-                    Select::make('inventories')->label('Raw Ingredients')->options(InventoryStock::all()->pluck('name', 'id'))->searchable()->multiple()->columnSpan(2)
+                    Select::make('inventories')->label('Raw Ingredients')->options(InventoryStock::all()->pluck('name', 'id'))->searchable()->multiple()->columnSpan(2)->live()
                 ]),
                 Grid::make(3)->schema([
                     TextInput::make('cost')->numeric()->required()->prefix('₱')->live(),

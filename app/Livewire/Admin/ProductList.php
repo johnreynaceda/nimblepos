@@ -67,7 +67,7 @@ class ProductList extends Component implements HasForms, HasTable
                 // ...
             ])
             ->actions([
-                Action::make('edit')->color('success')->icon('heroicon-o-pencil-square')->url(fn (Product $record): string => route('admin.products.edit', $record))
+                Action::make('edit')->color('info')->icon('heroicon-o-pencil-square')->url(fn (Product $record): string => route('admin.products.edit', $record))
                 // DeleteAction::make('delete')
             ])
             ->bulkActions([

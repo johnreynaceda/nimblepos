@@ -93,7 +93,7 @@ class InventoryList extends Component implements HasForms, HasTable
                 // ...
             ])
             ->actions([
-                EditAction::make('edit')->color('success')->form([
+                EditAction::make('edit')->color('info')->form([
                     Grid::make(3)->schema([
                         TextInput::make('stock_code')->disabled(),
                         TextInput::make('name')->required(),

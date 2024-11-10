@@ -35,6 +35,8 @@ class PointOfSale extends Component
 
     public $customer;
 
+     
+
     public function mount()
     {
         $trans = Transaction::whereDate('created_at', now())->count();
@@ -280,6 +282,20 @@ class PointOfSale extends Component
             $this->change_modal = true; 
          }
 
+    }
+
+    public function minusQty($key)
+{
+    if ($this->product_items[$key]['quantity'] > 1) {
+        $this->product_items[$key]['quantity']--;
+    } else {
+        // Remove the item if quantity reaches zero
+        unset($this->product_items[$key]);
+    }
+}
+
+    public function addQty($key){
+        $this->product_items[$key]['quantity']++;
     }
 
     

@@ -4,47 +4,75 @@
     grossSales: @entangle('grossSales'),
     lastYearGrossSales: @entangle('lastYearGrossSales'),
     categories: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+
     initNetSalesChart() {
-        var options = {
-            chart: {
-                type: 'line'
+        const ctx = document.getElementById('net-sales-chart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: this.categories,
+                datasets: [{
+                        label: 'Net Sales (This Year)',
+                        data: this.netsales,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderWidth: 2,
+                        fill: true
+                    },
+                    {
+                        label: 'Net Sales (Last Year)',
+                        data: this.lastYearSales,
+                        borderColor: 'rgba(153, 102, 255, 1)',
+                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                        borderWidth: 2,
+                        fill: true
+                    }
+                ]
             },
-            series: [{
-                    name: 'Net Sales (This Year)',
-                    data: this.netsales
-                },
-                {
-                    name: 'Net Sales (Last Year)',
-                    data: this.lastYearSales
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
                 }
-            ],
-            xaxis: {
-                categories: this.categories
             }
-        };
-        var chart = new ApexCharts(document.querySelector('#net-sales-chart'), options);
-        chart.render();
+        });
     },
+
     initGrossSalesChart() {
-        var options = {
-            chart: {
-                type: 'line'
+        const ctx = document.getElementById('gross-sales-chart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: this.categories,
+                datasets: [{
+                        label: 'Gross Sales (This Year)',
+                        data: this.grossSales,
+                        borderColor: 'rgba(255, 159, 64, 1)',
+                        backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                        borderWidth: 2,
+                        fill: true
+                    },
+                    {
+                        label: 'Gross Sales (Last Year)',
+                        data: this.lastYearGrossSales,
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderWidth: 2,
+                        fill: true
+                    }
+                ]
             },
-            series: [{
-                    name: 'Gross Sales (This Year)',
-                    data: this.grossSales
-                },
-                {
-                    name: 'Gross Sales (Last Year)',
-                    data: this.lastYearGrossSales
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
                 }
-            ],
-            xaxis: {
-                categories: this.categories
             }
-        };
-        var chart = new ApexCharts(document.querySelector('#gross-sales-chart'), options);
-        chart.render();
+        });
     }
 }" x-init="initNetSalesChart();
 initGrossSalesChart();">
@@ -52,11 +80,12 @@ initGrossSalesChart();">
         <!-- Net Sales Chart -->
         <div class="bg-white p-5 rounded-xl">
             <h2 class="text-lg font-bold">Net Sales Chart</h2>
-            <div id="net-sales-chart"></div>
+            <canvas id="net-sales-chart"></canvas>
+
         </div>
         <div class="bg-white p-5 rounded-xl">
             <h2 class="text-lg font-bold">Gross Sales Chart</h2>
-            <div id="gross-sales-chart"></div>
+            <canvas id="gross-sales-chart"></canvas>
         </div>
         <div class="bg-white p-5 rounded-xl">
             <div>

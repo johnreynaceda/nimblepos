@@ -56,7 +56,7 @@ class UserList extends Component implements HasForms, HasTable
                 // ...
             ])
             ->actions([
-                EditAction::make('edit')->color('success')->form([
+                EditAction::make('edit')->color('info')->form([
                     TextInput::make('name')->required(),
                     TextInput::make('email')->email()->required(),
                     TextInput::make('password')->password()->required(),
