@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('change')->nullable();
             $table->string('transaction_type')->nullable();
             $table->string('customer_name');
+            $table->string('username')->nullable();
 
             $table->timestamps();
         });

@@ -114,6 +114,7 @@ class PointOfSale extends Component
                     'change' => $this->change,
                     'customer_name' => $this->customer ?? '.', // Replace with your customer ID
                     'transaction_type' => $this->transaction_type, // Replace with your transaction type (e.g., 'sale', 'purchase')
+                    'username' => auth()->user()->name,
     
                     // 'user_id' => auth()->id(), // Replace with your user ID
                 ]);
