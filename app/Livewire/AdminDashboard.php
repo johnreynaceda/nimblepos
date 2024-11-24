@@ -42,12 +42,12 @@ class AdminDashboard extends Component
                 // $netSalesAmount += $transaction->->sum('amount');
 
                 foreach ($transaction->transactionOrders as $key => $value) {
-                    $netSalesAmount += $value->product->sum('price') * $value->quantity;
-             
+                    $grossSalesAmount += $value->product->price * $value->quantity;
+                    
                 }
                 
                 // Assuming each transaction has a 'total_amount' field for gross sales calculation
-                $grossSalesAmount += $transaction->total_amount;
+                $netSalesAmount += $transaction->total_amount;
             }
 
     
@@ -72,11 +72,10 @@ class AdminDashboard extends Component
                 // $netSalesAmount += $transaction->products->sum('amount');
 
                 foreach ($transaction->transactionOrders as $key => $value) {
-                    $netSalesAmount += $value->product->sum('price') * $value->quantity;
-             
+                    $grossSalesAmount += $value->product->price * $value->quantity;
                 }
                 // Gross sales calculation
-                $grossSalesAmount += $transaction->total_amount;
+                $netSalesAmount += $transaction->total_amount;
             }
     
             $this->lastYearSales[$month - 1] = $netSalesAmount;
